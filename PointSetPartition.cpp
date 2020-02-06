@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+using Point = Geometry::Point<double>;
+using PointSet = Geometry::PointSet<Point>;
+
 using Transposition = PointSet::Transposition;
 using Diff = PointSet::Diff;
 using DiffList = PointSet::DiffList;
@@ -199,7 +202,7 @@ int main()
 	//Parameters
 	int t = 8, n = 40, iterations = 1000000;
 	
-	Circle RG;
+	Geometry::Circle RG;
 	Qualifier f(t);
 
 	PointSet S = RG.born(n);

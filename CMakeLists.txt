@@ -20,8 +20,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 link_directories (${PROJECT_BINARY_DIR})
 
-include_directories("include")
+include_directories("include/Differential_Evolution")
+include_directories("include/Geometry")
 
-add_subdirectory("test")
+add_subdirectory("tests")
 
 add_executable("PointSetPartition" "PointSetPartition.cpp")

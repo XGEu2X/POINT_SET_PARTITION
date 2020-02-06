@@ -1,22 +1,13 @@
-//Add better method to get random values.
-
 #pragma once
 
 #include <ctime>
 #include <random>
-// Who came up with the dumb C++11 way of getting random stuff?
-// It's obviously missing some utility functions. Here they are.
 
-/**
-* @brief Just a helper function to get the default random engine
-*/
-inline std::default_random_engine& random_engine()
-{
-	using RE = std::default_random_engine;
-	using result_type = RE::result_type;
-	static RE e(static_cast<result_type>(time(nullptr)));
-	return e;
-}
+#include "pcg_random.hpp"
+#include "pcg_extras.hpp"
+
+#ifndef Probability_GUARD
+#define Probability_GUARD
 
 /**
 * @brief Returns true with probability p and false with probability 1-p
@@ -25,8 +16,11 @@ inline std::default_random_engine& random_engine()
 */
 inline bool probability_of_true(double p)
 {
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+	pcg64 randomEngine(seed_source);
+
 	std::bernoulli_distribution d(p);
-	return d(random_engine());
+	return d(randomEngine);
 }
 
 /**
@@ -37,9 +31,12 @@ inline bool probability_of_true(double p)
 template <class IntType = int>
 IntType random_int(IntType from, IntType thru)
 {
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+	pcg64 randomEngine(seed_source);
+
 	std::uniform_int_distribution<IntType> d{};
 	using parm_t = typename decltype(d)::param_type;
-	return d(random_engine(), parm_t{ from, --thru });
+	return d(randomEngine, parm_t{ from, --thru });
 }
 
 /**
@@ -50,8 +47,12 @@ IntType random_int(IntType from, IntType thru)
 template <class FloatType = double>
 FloatType random_real(FloatType from, FloatType upto)
 {
+	pcg_extras::seed_seq_from<std::random_device> seed_source;
+	pcg64 randomEngine(seed_source);
+
 	std::uniform_real_distribution<> d{};
 	using parm_t = decltype(d)::param_type;
-	return d(random_engine(), parm_t{ from, upto });
+	return d(randomEngine, parm_t{ from, upto });
 }
 
+#endif
