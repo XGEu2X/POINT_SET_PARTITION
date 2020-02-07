@@ -24,11 +24,24 @@ namespace Geometry{
 		inline typename std::vector<point>::value_type& operator[](const size_t i) { return S[i]; }
 		inline typename std::vector<point>::value_type operator[](const size_t i) const { return S[i]; }
 
-		std::string to_string() const {
+		std::string to_string( const unsigned int string_type = TO_STRING_DEFAULT) const {
+			size_t size = S.size();
 			std::string result = "";
-			for (const point& p : S) {
-				result += p.to_string() + "\n";
+			if (string_type == TO_STRING_DEFAULT) {
+				for (const point& p : S) {
+					result += p.to_string() + "\n";
+				}
 			}
+			else if (string_type == TO_STRING_GEOGEBRA) {
+				result += "Execute[{";
+
+				for (size_t c1 = 0; c1 < size; ++c1) {
+					result += "\"P" + std::to_string(c1) + "=" + S[c1].to_string() + "\"";
+					if (c1 == size - 1) result += "}]";
+					else result += ",";
+				}
+			}
+			
 			return result;
 		}
 		size_t size() const { return S.size(); }
@@ -83,6 +96,11 @@ namespace Geometry{
 	public:
 		inline static const unsigned int ORDER_ASCENDENT = 1;
 		inline static const unsigned int ORDER_DESCENDENT = 2;
+
+		//to_string options
+
+		inline static const unsigned int TO_STRING_DEFAULT = 1;
+		inline static const unsigned int TO_STRING_GEOGEBRA = 2;
 	private:
 		std::vector<point> S;
 	};

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Probability-Headers/Probability.hpp"
+#include "Probability/Probability.hpp"
 
 namespace Evolutive {
 	template <class Population, class Descriptor, class Qualifier>

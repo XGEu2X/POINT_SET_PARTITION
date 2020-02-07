@@ -211,7 +211,7 @@ int main()
 		f(S, true);
 		cout << "Value: " << min_value << endl;
 		S.sorted_by_coordinate(1);
-		cout << S.to_string();
+		cout << S.to_string(PointSet::TO_STRING_GEOGEBRA);
 	//}
 
 	for (size_t c1 = 0; c1 < iterations; ++c1) {
@@ -224,7 +224,7 @@ int main()
 				f(S, true);
 				cout << "Value: " << min_value << endl;
 				S.sorted_by_coordinate(1);
-				cout << S.to_string();
+				cout << S.to_string(PointSet::TO_STRING_GEOGEBRA);
 			//}
 		}
 	}

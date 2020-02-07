@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PointSet.hpp"
-#include "Probability-Headers/Probability.hpp"
+#include "Probability/Probability.hpp"
 
 const double Pi = 3.14159265358979323846;
 
