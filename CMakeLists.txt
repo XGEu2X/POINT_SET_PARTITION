@@ -25,4 +25,5 @@ include_directories("include/Geometry")
 
 add_subdirectory("tests")
 
-add_executable("PointSetPartition" "PointSetPartition.cpp")
+add_executable("RandomSearch" "RandomSearch.cpp" "PointSetPartition.h")
+add_executable("Rate" "Rate.cpp" "PointSetPartition.h")
