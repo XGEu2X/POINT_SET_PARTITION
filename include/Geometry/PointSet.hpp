@@ -34,10 +34,17 @@ namespace Geometry{
 			}
 			else if (string_type == TO_STRING_GEOGEBRA) {
 				result += "Execute[{";
-
 				for (size_t c1 = 0; c1 < size; ++c1) {
 					result += "\"P" + std::to_string(c1) + "=" + S[c1].to_string() + "\"";
 					if (c1 == size - 1) result += "}]";
+					else result += ",";
+				}
+			}
+			else if (string_type == TO_STRING_SAGE) {
+				result += "p=[";
+				for (size_t c1 = 0; c1 < size; ++c1) {
+					result += S[c1].to_string();
+					if (c1 == size - 1) result += "]";
 					else result += ",";
 				}
 			}
@@ -101,6 +108,7 @@ namespace Geometry{
 
 		inline static const unsigned int TO_STRING_DEFAULT = 1;
 		inline static const unsigned int TO_STRING_GEOGEBRA = 2;
+		inline static const unsigned int TO_STRING_SAGE = 3;
 	private:
 		std::vector<point> S;
 	};

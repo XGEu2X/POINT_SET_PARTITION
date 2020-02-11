@@ -115,11 +115,20 @@ public:
 				if (is_valid_partition(HS[c1].second, lower->second)) {
 					++result;
 					if (printFlag) {
-						for (size_t i = 0; i < HS[c1].second.size(); ++i)std::cout << HS[c1].second[i] << " ";
-						std::cout << std::endl;
-						for (size_t i = 0; i < lower->second.size(); ++i)std::cout << lower->second[i] << " ";
-						std::cout << std::endl;
-						std::cout << std::endl;
+						std::cout << "p1=[";
+						for (size_t i = 0; i < HS[c1].second.size(); ++i){
+							std::cout << HS[c1].second[i];
+							if(i < HS[c1].second.size()-1)
+								std::cout << ",";
+						}
+						std::cout << "]" << std::endl;
+						std::cout << "p2=[";
+						for (size_t i = 0; i < lower->second.size(); ++i){
+							std::cout << lower->second[i];
+							if(i < lower->second.size() - 1 )
+								std::cout << ",";
+						}
+						std::cout << "]" << std::endl << "dibujo(p,p1,p2)" << std::endl;
 					}
 				}
 				++lower; if ((lower == upper))break;
