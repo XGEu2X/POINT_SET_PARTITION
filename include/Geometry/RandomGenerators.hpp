@@ -3,6 +3,8 @@
 #include "PointSet.hpp"
 #include "Probability/Probability.hpp"
 
+#include <cfloat>
+
 const double Pi = 3.14159265358979323846;
 
 namespace Geometry {
@@ -69,7 +71,42 @@ namespace Geometry {
 	private:
 	public:
 		inline const static double DEFAULT_RADIUS = 1;
-	private:
+	protected:
 		double r;
+	};
+
+	class CirclePointSet : public Circle {
+	public:
+		using point = Point<double>;
+		using pointSet = PointSet<point>;
+
+		CirclePointSet(const size_t _amount = DEFAULT_AMOUNT, const double _r = DEFAULT_RADIUS): amount(_amount) {
+			r = _r;
+		}
+
+		pointSet born() const {
+			Circle Generator(r);
+			return Generator.born(amount);
+		}
+		std::vector<pointSet> born(const size_t i) const {
+			std::vector<pointSet> result;
+			for (size_t c1 = 0; c1 < i; ++c1) {
+				result.push_back(born());
+			}
+			return result;
+		}
+		pointSet project(const pointSet& P) const {
+			pointSet result = P;
+			Circle Generator(r);
+			for (point& p : result) {
+				p = Generator.project(p);
+			}
+			return result;
+		}
+	private:
+	public:
+		inline static const size_t DEFAULT_AMOUNT = 20;
+	private:
+		size_t amount;
 	};
 }

@@ -13,9 +13,9 @@ namespace Geometry{
 		using DiffList = std::vector<Diff>;
 
 		//Evolutive Algorithms compatibility
-		using settler_type = point;
+		using value_type = point;
 
-		PointSet() :S(0) {}
+		PointSet() :S(0), value(NO_VALUE) {}
 
 		inline typename std::vector<point>::iterator begin() { return S.begin(); }
 		inline typename std::vector<point>::const_iterator begin() const { return S.begin(); }
@@ -45,6 +45,11 @@ namespace Geometry{
 			return result;
 		}
 		size_t size() const { return S.size(); }
+
+		//Evolutive compatibility
+		inline size_t dimension() const { S.size(); }
+		inline double get_value() const { return value; }
+		void set_value(const double v) { value = v; }
 
 		inline void push_back(const point& p) { S.push_back(p); }
 
@@ -101,7 +106,30 @@ namespace Geometry{
 
 		inline static const unsigned int TO_STRING_DEFAULT = 1;
 		inline static const unsigned int TO_STRING_GEOGEBRA = 2;
+
+		//Evolutive compatibility
+		inline static const double NO_VALUE = -1;
 	private:
 		std::vector<point> S;
+
+		//Evolutive compatibility
+		double value;
 	};
+	template <typename point = Point<double> >
+	PointSet<point> operator +(const PointSet<point>& p1, const PointSet<point>& p2) {
+		size_t dim = p1.size();
+		PointSet<point> result(dim);
+		for (size_t c1 = 0; c1 < dim; ++c1) result[c1] = p1[c1] + p2[c1];
+		return result;
+	}
+	template <typename point = Point<double> >
+	PointSet<point> operator *(const double d, const PointSet<point>& p) {
+		size_t dim = p.size();
+		PointSet<point> result(dim);
+		for (size_t c1 = 0; c1 < dim; ++c1) result[c1] = d * p[c1];
+		return result;
+	}
+	template <typename point = Point<double> >
+	PointSet<point> operator -(const PointSet<point>& p1, const PointSet<point>& p2) { return p1 + (-1) * p2; }
 }
+

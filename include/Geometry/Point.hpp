@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <cmath>
 
 namespace Geometry {
 	template <typename Scalar = double>

@@ -22,7 +22,7 @@ public:
 
 
 	Qualifier(const size_t _t) :t(_t) {}
-	unsigned int operator()(PointSet& p, const bool printFlag = false) {
+	unsigned int operator()(PointSet& p, const bool printFlag = false) const {
 		unsigned int result = 0;
 
 		p.sort_by_coordinate(1);
@@ -130,7 +130,7 @@ public:
 		return result;
 	}
 private:
-	void apply_transp(std::vector<size_t>& P, const Transposition& tr) {
+	void apply_transp(std::vector<size_t>& P, const Transposition& tr) const {
 		for (size_t c1 = 0; c1 < P.size(); ++c1) {
 			if (P[c1] == tr.first) {
 				P[c1] = tr.second;
@@ -139,7 +139,7 @@ private:
 			}
 		}
 	}
-	bool is_valid_partition(const std::vector<size_t>& p1, const std::vector<size_t>& p2) {
+	bool is_valid_partition(const std::vector<size_t>& p1, const std::vector<size_t>& p2) const {
 		std::vector<size_t> P1 = p1, P2 = p2;
 		//std::sort(P1.begin(), P1.end()); std::sort(P2.begin(), P2.end());
 		std::vector<size_t> V(p1.size() + p2.size());
@@ -151,7 +151,7 @@ private:
 		}
 		return false;
 	}
-	bool has_difference(const SequenceList::const_iterator& it1, const SequenceList::const_iterator& it2) {
+	bool has_difference(const SequenceList::const_iterator& it1, const SequenceList::const_iterator& it2) const {
 		std::vector<size_t> V(it1->second.size());
 		std::vector<size_t>::iterator it = std::set_intersection(
 			it1->second.begin(),
@@ -163,7 +163,7 @@ private:
 		V.resize(it - V.begin());
 		return V.size() != it1->second.size();
 	}
-	double ort(const double d) {
+	double ort(const double d) const {
 		double result = d;
 		if (d >= 0 && d < 2) {
 			result = 1 - result;
