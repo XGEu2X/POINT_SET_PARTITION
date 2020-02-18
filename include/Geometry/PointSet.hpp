@@ -34,10 +34,17 @@ namespace Geometry{
 			}
 			else if (string_type == TO_STRING_GEOGEBRA) {
 				result += "Execute[{";
-
 				for (size_t c1 = 0; c1 < size; ++c1) {
 					result += "\"P" + std::to_string(c1) + "=" + S[c1].to_string() + "\"";
 					if (c1 == size - 1) result += "}]";
+					else result += ",";
+				}
+			}
+			else if (string_type == TO_STRING_SAGE) {
+				result += "p=[";
+				for (size_t c1 = 0; c1 < size; ++c1) {
+					result += S[c1].to_string();
+					if (c1 == size - 1) result += "]";
 					else result += ",";
 				}
 			}
@@ -47,7 +54,7 @@ namespace Geometry{
 		size_t size() const { return S.size(); }
 
 		//Evolutive compatibility
-		inline size_t dimension() const { S.size(); }
+		inline size_t dimension() const { return S.size(); }
 		inline double get_value() const { return value; }
 		void set_value(const double v) { value = v; }
 
@@ -106,7 +113,7 @@ namespace Geometry{
 
 		inline static const unsigned int TO_STRING_DEFAULT = 1;
 		inline static const unsigned int TO_STRING_GEOGEBRA = 2;
-
+		inline static const unsigned int TO_STRING_SAGE = 3;
 		//Evolutive compatibility
 		inline static const double NO_VALUE = -1;
 	private:
@@ -118,15 +125,15 @@ namespace Geometry{
 	template <typename point = Point<double> >
 	PointSet<point> operator +(const PointSet<point>& p1, const PointSet<point>& p2) {
 		size_t dim = p1.size();
-		PointSet<point> result(dim);
-		for (size_t c1 = 0; c1 < dim; ++c1) result[c1] = p1[c1] + p2[c1];
+		PointSet<point> result;
+		for (size_t c1 = 0; c1 < dim; ++c1) result.push_back(p1[c1] + p2[c1]);
 		return result;
 	}
 	template <typename point = Point<double> >
 	PointSet<point> operator *(const double d, const PointSet<point>& p) {
 		size_t dim = p.size();
-		PointSet<point> result(dim);
-		for (size_t c1 = 0; c1 < dim; ++c1) result[c1] = d * p[c1];
+		PointSet<point> result;
+		for (size_t c1 = 0; c1 < dim; ++c1) result.push_back(d * p[c1]);
 		return result;
 	}
 	template <typename point = Point<double> >

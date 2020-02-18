@@ -2,6 +2,7 @@
 
 #include "PointSet.hpp"
 #include "Probability/Probability.hpp"
+#include <cfloat>
 
 #include <cfloat>
 

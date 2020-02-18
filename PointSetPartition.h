@@ -115,11 +115,20 @@ public:
 				if (is_valid_partition(HS[c1].second, lower->second)) {
 					++result;
 					if (printFlag) {
-						for (size_t i = 0; i < HS[c1].second.size(); ++i)std::cout << HS[c1].second[i] << " ";
-						std::cout << std::endl;
-						for (size_t i = 0; i < lower->second.size(); ++i)std::cout << lower->second[i] << " ";
-						std::cout << std::endl;
-						std::cout << std::endl;
+						std::cout << "p1=[";
+						for (size_t i = 0; i < HS[c1].second.size(); ++i){
+							std::cout << HS[c1].second[i];
+							if(i < HS[c1].second.size()-1)
+								std::cout << ",";
+						}
+						std::cout << "]" << std::endl;
+						std::cout << "p2=[";
+						for (size_t i = 0; i < lower->second.size(); ++i){
+							std::cout << lower->second[i];
+							if(i < lower->second.size() - 1 )
+								std::cout << ",";
+						}
+						std::cout << "]" << std::endl << "dibujo(p,p1,p2)" << std::endl;
 					}
 				}
 				++lower; if ((lower == upper))break;
@@ -140,16 +149,14 @@ private:
 		}
 	}
 	bool is_valid_partition(const std::vector<size_t>& p1, const std::vector<size_t>& p2) const {
+		bool result = false;
 		std::vector<size_t> P1 = p1, P2 = p2;
 		//std::sort(P1.begin(), P1.end()); std::sort(P2.begin(), P2.end());
 		std::vector<size_t> V(p1.size() + p2.size());
 		std::vector<size_t>::iterator it = std::set_intersection(P1.begin(), P1.end(), P2.begin(), P2.end(), V.begin());
 		V.resize(it - V.begin());
-		if (V.size() == t / 2) {
-
-			return true;
-		}
-		return false;
+		if (V.size() == t / 2) result = true;
+		return result;
 	}
 	bool has_difference(const SequenceList::const_iterator& it1, const SequenceList::const_iterator& it2) const {
 		std::vector<size_t> V(it1->second.size());
