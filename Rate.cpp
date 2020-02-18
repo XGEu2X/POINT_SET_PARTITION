@@ -20,7 +20,7 @@ int main() {
 	cout << "Inserte t: ";
 	cin >> t;
 
-	Qualifier f(t);
+	Qualifier f(t, Qualifier::METHOD_PLUS_DIFFERENCE);
 
 	cout << f(P, true) << endl;
 

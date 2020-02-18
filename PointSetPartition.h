@@ -21,9 +21,11 @@ class Qualifier {
 public:
 
 
-	Qualifier(const size_t _t) :t(_t) {}
-	unsigned int operator()(PointSet& p, const bool printFlag = false) const {
-		unsigned int result = 0;
+	Qualifier(const size_t _t, const unsigned int _method = METHOD_DEFAULT) :t(_t), method(_method) {}
+	double operator()(PointSet& p, const bool printFlag = false) const {
+		double result = 0;
+		//METHOD_PLUS_DIFFERENCES
+		std::vector < std::pair<double, double>> Partitioners;
 
 		p.sort_by_coordinate(1);
 
@@ -33,12 +35,6 @@ public:
 				return d1.first > d2.first;
 			}
 		);
-
-		/*
-		for (size_t c1 = 0; c1 < DL.size(); ++c1) {
-			std::cout << DL[c1].first << "--> (" << DL[c1].second.first << " " << DL[c1].second.second << ")" << std::endl;
-		}
-		*/
 
 		std::vector<size_t> firstSeq; for (size_t c1 = 0; c1 < p.size(); ++c1) { firstSeq.push_back(c1); }
 		SequenceList SL;
@@ -52,16 +48,6 @@ public:
 			double reversedX = SL[c1].first + 2;
 			SL.push_back(std::pair(reversedX, reversed));
 		}
-
-		/*
-		for (size_t c1 = 0; c1 < SL.size(); ++c1) {
-			std::cout << SL[c1].first << " ";
-			for (size_t c2 = 0; c2 < firstSeq.size(); ++c2) {
-				std::cout << SL[c1].second[c2] << " ";
-			}
-			std::cout << std::endl;
-		}
-		*/
 
 		SequenceList HS = SL, TS = SL;
 		for (size_t c1 = 0; c1 < SL.size(); ++c1) {
@@ -100,11 +86,11 @@ public:
 		}
 		if (!has_difference(TS.end() - 1, TS.begin()))TS.erase(TS.begin());
 
+
 		size_t n = HS.size();
 		for (size_t c1 = 0; c1 < n; ++c1) {
 			size_t next = (c1 + 1) % n;
 			double x1 = ort(HS[c1].first), x2 = ort(HS[next].first);
-			//if (x1 > 4) { x1 = x1 - 4; } if (x2 > 4) { x2 = x2 - 4; }
 			SequenceList::iterator lower = std::upper_bound(TS.begin(), TS.end(), x1, doubleVsSeq());
 			if (lower == TS.begin())lower = TS.end() - 1;
 			else --lower;
@@ -113,6 +99,9 @@ public:
 
 			while (lower != upper) {
 				if (is_valid_partition(HS[c1].second, lower->second)) {
+					//METHOD_PLUS_DIFFERENCES
+					Partitioners.push_back(std::pair(HS[c1].first, HS[next].first));
+
 					++result;
 					if (printFlag) {
 						std::cout << "p1=[";
@@ -135,6 +124,19 @@ public:
 				if (lower == TS.end())lower = TS.begin(); if ((lower == upper))break;
 			}
 		}
+
+		if(method == METHOD_PLUS_DIFFERENCE){
+			double minDiff = 5;
+			for (size_t c1 = 0; c1 < Partitioners.size(); ++c1) {
+				size_t next = (c1 + 1) % Partitioners.size();
+				double a = Partitioners[c1].second, b = Partitioners[next].first;
+				if (b < a) b += 4;
+				double diff = b - a;
+				if (minDiff > diff) minDiff = diff;
+			}
+			result = result + (minDiff / 4.0);
+		}
+		//
 
 		return result;
 	}
@@ -195,6 +197,9 @@ private:
 		return result;
 	}
 public:
+	inline static unsigned int METHOD_DEFAULT = 1;
+	inline static unsigned int METHOD_PLUS_DIFFERENCE = 2;
 private:
 	const size_t t;
+	const unsigned int method;
 };
