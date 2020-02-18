@@ -32,17 +32,19 @@ int main() {
 	f(S[popSize - 1], true);
 	cout << "Value: " << S[popSize - 1].get_value() << endl;
 	S[popSize - 1].sort_by_coordinate(1);
-	cout << S[popSize - 1].to_string(Circle::pointSet::TO_STRING_GEOGEBRA) << endl;
+	cout << S[popSize - 1].to_string(Circle::pointSet::TO_STRING_SAGE) << endl;
 	double min_value = S[popSize - 1].get_value();
 
 	for (size_t c1 = 0; c1 < iterations; ++c1) {
 		DE.evolve(S, RG, f, 1, popSize / 10);
 		if (S[popSize - 1].get_value() < min_value) {
 			min_value = S[popSize - 1].get_value();
-			f(S[popSize - 1], true);
+			if (min_value < 5) {
+				S[popSize - 1].sort_by_coordinate(1);
+				cout << S[popSize-1].to_string(Circle::pointSet::TO_STRING_SAGE) << endl;
+				f(S[popSize - 1], true);
+			}
 			cout << "Value: " << min_value << endl;
-			S[popSize - 1].sort_by_coordinate(1);
-			cout << S[popSize-1].to_string(Circle::pointSet::TO_STRING_GEOGEBRA) << endl;
 		}
 	}
 }
