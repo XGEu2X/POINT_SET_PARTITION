@@ -67,6 +67,7 @@ namespace Geometry {
 		point project( const point& p) const { 
 			point result = p;
 			if (result.norm() >= r)result = (r-DBL_EPSILON) * p.normalized();
+			result = result.perturbed(Point<double>::DEFAULT_EPSILON);
 			return result;
 		}
 	private:

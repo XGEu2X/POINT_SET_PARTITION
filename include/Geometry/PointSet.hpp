@@ -104,6 +104,14 @@ namespace Geometry{
 			return result;
 		}
 
+		PointSet<point> perturbed(const double epsilon = point::DEFAULT_EPSILON) {
+			PointSet<point> result;
+			for (size_t c1 = 0; c1 < S.size(); ++c1) {
+				result.push_back(S[c1].perturbed(epsilon));
+			}
+			return result;
+		}
+
 	private:
 	public:
 		inline static const unsigned int ORDER_ASCENDENT = 1;

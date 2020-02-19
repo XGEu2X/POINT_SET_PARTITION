@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Probability/Probability.hpp"
+
 #include <vector>
 #include <string>
 #include <cmath>
@@ -43,6 +45,16 @@ namespace Geometry {
 		}
 		inline size_t dimension() const { return V.size(); }
 
+		Point<Scalar> perturbed(const double epsilon = DEFAULT_EPSILON) const {
+			Point<Scalar> result(V);
+			for (size_t c1 = 0; c1 < result.dimension(); ++c1) {
+				double d = epsilon;
+				if (probability_of_true(0.5))d *= -1;
+				result[c1] += d;
+			}
+			return result;
+		}
+
 		std::string to_string() const {
 			std::string result = "";
 			for (size_t c1 = 0; c1 < V.size(); ++c1) {
@@ -53,10 +65,14 @@ namespace Geometry {
 			result += ")";
 			return result;
 		}
+
+
 	private:
 	public:
 		inline static const size_t DEFAULT_DIM = 2;
 		inline static const double NO_VALUE = -1;
+
+		inline static const double DEFAULT_EPSILON = 0.001;
 	private:
 		std::vector<double> V;
 		double value;
