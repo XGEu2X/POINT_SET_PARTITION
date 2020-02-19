@@ -25,7 +25,9 @@ public:
 	double operator()(PointSet& p, const bool printFlag = false) const {
 		double result = 0;
 		//METHOD_PLUS_DIFFERENCES
-		std::vector < std::pair<double, double>> Partitioners;
+		std::vector<std::pair<double, double>> Partitioners;
+		//METHOD_MIDDLE_DIFFERENCE
+		std::vector<double> MiddleDifferences;
 
 		p.sort_by_coordinate(1);
 
@@ -99,8 +101,20 @@ public:
 
 			while (lower != upper) {
 				if (is_valid_partition(HS[c1].second, lower->second)) {
-					//METHOD_PLUS_DIFFERENCES
-					Partitioners.push_back(std::pair(HS[c1].first, HS[next].first));
+					if(method == METHOD_PLUS_DIFFERENCE)
+						Partitioners.push_back(std::pair(HS[c1].first, HS[next].first));
+					else if (method == METHOD_MIDDLE_DIFFERENCE) {
+						double a1 = HS[c1].first, b1 = HS[next].first;
+						if (b1 < a1)b1 += 4;
+						double a = (b1 + a1) / 2;
+						SequenceList::iterator sLower = lower + 1;
+						if (sLower == TS.end())sLower = TS.begin();
+						a1 = lower->first; b1 = sLower->first;
+						if (b1 < a1)b1 += 4;
+						double b = (b1 + a1) / 2;
+						if (b < a)b += 4;
+						MiddleDifferences.push_back(b-a);
+					}
 
 					++result;
 					if (printFlag) {
@@ -135,6 +149,13 @@ public:
 				if (minDiff > diff) minDiff = diff;
 			}
 			result = result + (minDiff / 4.0);
+		}
+		else if (method == METHOD_MIDDLE_DIFFERENCE) {
+			double minDiff = 5;
+			for (double d : MiddleDifferences) {
+				if (d < minDiff)minDiff = d;
+			}
+			result += minDiff / 4.0;
 		}
 		//
 
@@ -199,6 +220,7 @@ private:
 public:
 	inline static unsigned int METHOD_DEFAULT = 1;
 	inline static unsigned int METHOD_PLUS_DIFFERENCE = 2;
+	inline static unsigned int METHOD_MIDDLE_DIFFERENCE = 3;
 private:
 	const size_t t;
 	const unsigned int method;
