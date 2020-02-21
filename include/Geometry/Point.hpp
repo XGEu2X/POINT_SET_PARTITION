@@ -72,7 +72,7 @@ namespace Geometry {
 		inline static const size_t DEFAULT_DIM = 2;
 		inline static const double NO_VALUE = -1;
 
-		inline static const double DEFAULT_EPSILON = 0.001;
+		inline static const double DEFAULT_EPSILON = 0.01;
 	private:
 		std::vector<double> V;
 		double value;
