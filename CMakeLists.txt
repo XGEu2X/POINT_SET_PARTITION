@@ -24,6 +24,7 @@ include_directories("include/Differential_Evolution")
 include_directories("include/Geometry")
 
 add_subdirectory("tests")
+add_subdirectory("auto_search")
 
 add_executable("RandomSearch" "RandomSearch.cpp" "PointSetPartition.h")
 add_executable("DiffEvoSearch" "DiffEvoSearch.cpp" "PointSetPartition.h")

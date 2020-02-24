@@ -20,7 +20,7 @@ int main() {
 	cin >> iterations;
 
 	CirclePointSet RG(n);
-	Qualifier f(t, Qualifier::METHOD_MIDDLE_DIFFERENCE);
+	Qualifier f(t, Qualifier::METHOD_RANGE_SIZE);
 
 	size_t popSize = 40;
 	vector< Circle::pointSet >S = RG.born(popSize);

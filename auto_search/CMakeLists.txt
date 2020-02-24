@@ -1,0 +1,1 @@
+add_executable("AutoSearch" "AutoSearch.cpp" "AutoSearch.h")

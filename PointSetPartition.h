@@ -101,7 +101,8 @@ public:
 
 			while (lower != upper) {
 				if (is_valid_partition(HS[c1].second, lower->second)) {
-					if(method == METHOD_PLUS_DIFFERENCE)
+					//DEPENDS ON THE METHOD USED
+					if(method == METHOD_PLUS_DIFFERENCE || method == METHOD_RANGE_SIZE)
 						Partitioners.push_back(std::pair(HS[c1].first, HS[next].first));
 					else if (method == METHOD_MIDDLE_DIFFERENCE) {
 						double a1 = HS[c1].first, b1 = HS[next].first;
@@ -139,6 +140,7 @@ public:
 			}
 		}
 
+		//DEPENDS ON THE METHOD USED
 		if(method == METHOD_PLUS_DIFFERENCE){
 			double minDiff = 5;
 			for (size_t c1 = 0; c1 < Partitioners.size(); ++c1) {
@@ -156,6 +158,16 @@ public:
 				if (d < minDiff)minDiff = d;
 			}
 			result += minDiff / 4.0;
+		}
+		else if (method == METHOD_RANGE_SIZE) {
+			double minSize = 5;
+			for (std::pair<double, double> Pair : Partitioners) {
+				double x = Pair.first, y = Pair.second;
+				if (y < x)y += 4;
+				double size = y - x;
+				if (size < minSize)minSize = size;
+			}
+			result += minSize;
 		}
 		//
 
@@ -221,6 +233,8 @@ public:
 	inline static unsigned int METHOD_DEFAULT = 1;
 	inline static unsigned int METHOD_PLUS_DIFFERENCE = 2;
 	inline static unsigned int METHOD_MIDDLE_DIFFERENCE = 3;
+	inline static unsigned int METHOD_RANGE_SIZE = 4;
+
 private:
 	const size_t t;
 	const unsigned int method;
