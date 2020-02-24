@@ -1,21 +1,24 @@
+#!/bin/bash
+
 [ ! -d "ins/" ] && mkdir ins/
 
-alg=(2)
+alg=(1 2)
 
-for ((c1=0; c1<=5; c1++))
+nl=5
+for ((c1=0; c1<=$nl; c1++))
 do
 	let a=10+2*$c1
 	n[$c1]=$a
 done
-r=(1)
+r=(0.5 1)
 
-popSize=(40)
-Cm=(0.2)
-Cp=(1)
-randSettlers=(4)
+popSize=(60)
+Cm=(0.1 0.2 0.3)
+Cp=(0.5 0.75 1)
+randSettlers=(6)
 
-iterations=100
-method=(3)
+iterations=10000000
+method=(1 2 3)
 
 for _alg in ${alg[*]}
 do

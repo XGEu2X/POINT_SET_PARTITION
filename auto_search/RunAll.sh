@@ -1,11 +1,14 @@
+#!/bin/bash
 [ ! -d "outs/" ] && mkdir outs
 
 ins=(ins/*)
 
 for ((i=0; i<${#ins[@]}; i++)); do
 	filename=${ins[$i]}
-	echo $filename
 	filename=${filename:4:-3}
-	echo $filename
-	((./../build/AutoSearch < 'ins/'$filename'.in') >> 'outs/'$filename'.out'; sleep 300) &
+	(./../build/AutoSearch < 'ins/'$filename'.in') >> 'outs/'$filename'.out';
+	if(($i%5==0))
+	then
+		sleep 300
+	fi
 done
