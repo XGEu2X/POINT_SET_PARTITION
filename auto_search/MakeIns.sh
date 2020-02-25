@@ -17,8 +17,8 @@ Cm=(0.1 0.2 0.3)
 Cp=(0.5 0.75 1)
 randSettlers=(6)
 
-iterations=10000000
-method=(1 2 3)
+iterations=100
+method=(1 2 3 4)
 
 for _alg in ${alg[*]}
 do
