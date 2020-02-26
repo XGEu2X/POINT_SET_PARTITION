@@ -152,8 +152,8 @@ public:
 			size_t size = Borders.size();
 			for (size_t c1 = 0; c1 < size; ++c1) {
 				size_t next = (c1 + 1) % size;
-				Geometry::Point<double> m1 = (1/ (Borders[c1].first + Borders[c1].second).norm()) * Borders[c1].first + Borders[c1].second;
-				Geometry::Point<double> m2 = (1/ (Borders[next].first + Borders[next].second).norm())*Borders[next].first + Borders[next].second;
+				Geometry::Point<double> m1 = (1/ (Borders[c1].first + Borders[c1].second).norm()) * (Borders[c1].first + Borders[c1].second);
+				Geometry::Point<double> m2 = (1/ (Borders[next].first + Borders[next].second).norm())*(Borders[next].first + Borders[next].second);
 				double diff = 1 - m1 * m2;
 				diff /= 2;
 				if (diff < minDiff)minDiff = diff;
