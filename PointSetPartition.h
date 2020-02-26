@@ -24,10 +24,9 @@ public:
 	Qualifier(const size_t _t, const unsigned int _method = METHOD_DEFAULT) :t(_t), method(_method) {}
 	double operator()(PointSet& p, const bool printFlag = false) const {
 		double result = 0;
-		//METHOD_PLUS_DIFFERENCES
-		std::vector<std::pair<double, double>> Partitioners;
-		//METHOD_MIDDLE_DIFFERENCE
-		std::vector<double> MiddleDifferences;
+		
+		//Structures to be used by the methods
+		std::vector<std::pair<Geometry::Point<double>, Geometry::Point<double>>> Borders;
 
 		p.sort_by_coordinate(1);
 
@@ -101,20 +100,16 @@ public:
 
 			while (lower != upper) {
 				if (is_valid_partition(HS[c1].second, lower->second)) {
+
+
 					//DEPENDS ON THE METHOD USED
-					if(method == METHOD_PLUS_DIFFERENCE || method == METHOD_RANGE_SIZE)
-						Partitioners.push_back(std::pair(HS[c1].first, HS[next].first));
-					else if (method == METHOD_MIDDLE_DIFFERENCE) {
-						double a1 = HS[c1].first, b1 = HS[next].first;
-						if (b1 < a1)b1 += 4;
-						double a = (b1 + a1) / 2;
-						SequenceList::iterator sLower = lower + 1;
-						if (sLower == TS.end())sLower = TS.begin();
-						a1 = lower->first; b1 = sLower->first;
-						if (b1 < a1)b1 += 4;
-						double b = (b1 + a1) / 2;
-						if (b < a)b += 4;
-						MiddleDifferences.push_back(b-a);
+					if (method != METHOD_DEFAULT) {
+						Borders.push_back(
+							std::pair< Geometry::Point<double>, Geometry::Point<double>>(
+								decrypt(HS[c1].first), 
+								decrypt(HS[next].first)
+							)
+						);
 					}
 
 					++result;
@@ -141,33 +136,39 @@ public:
 		}
 
 		//DEPENDS ON THE METHOD USED
-		if(method == METHOD_PLUS_DIFFERENCE){
-			double minDiff = 5;
-			for (size_t c1 = 0; c1 < Partitioners.size(); ++c1) {
-				size_t next = (c1 + 1) % Partitioners.size();
-				double a = Partitioners[c1].second, b = Partitioners[next].first;
-				if (b < a) b += 4;
-				double diff = b - a;
-				if (minDiff > diff) minDiff = diff;
+		if (method == METHOD_PLUS_DIFFERENCE) {
+			double minDiff = 0.999;
+			size_t size = Borders.size();
+			for (size_t c1 = 0; c1 < size; ++c1) {
+				size_t next = (c1 + 1) % size;
+				double diff = 1 - Borders[c1].second * Borders[next].first;
+				diff /= 2;
+				if (diff < minDiff)minDiff = diff;
 			}
-			result = result + (minDiff / 4.0);
+			result += minDiff;
 		}
-		else if (method == METHOD_MIDDLE_DIFFERENCE) {
-			double minDiff = 5;
-			for (double d : MiddleDifferences) {
-				if (d < minDiff)minDiff = d;
+		if (method == METHOD_MIDDLE_DIFFERENCE) {
+			double minDiff = 0.999;
+			size_t size = Borders.size();
+			for (size_t c1 = 0; c1 < size; ++c1) {
+				size_t next = (c1 + 1) % size;
+				Geometry::Point<double> m1 = (1/ (Borders[c1].first + Borders[c1].second).norm()) * Borders[c1].first + Borders[c1].second;
+				Geometry::Point<double> m2 = (1/ (Borders[next].first + Borders[next].second).norm())*Borders[next].first + Borders[next].second;
+				double diff = 1 - m1 * m2;
+				diff /= 2;
+				if (diff < minDiff)minDiff = diff;
 			}
-			result += minDiff / 4.0;
+			result += minDiff;
 		}
-		else if (method == METHOD_RANGE_SIZE) {
-			double minSize = 5;
-			for (std::pair<double, double> Pair : Partitioners) {
-				double x = Pair.first, y = Pair.second;
-				if (y < x)y += 4;
-				double size = y - x;
-				if (size < minSize)minSize = size;
+		if (method == METHOD_RANGE_SIZE) {
+			double minDiff = 0.999;
+			size_t size = Borders.size();
+			for (size_t c1 = 0; c1 < size; ++c1) {
+				double diff = 1 - Borders[c1].second * Borders[c1].first;
+				diff /= 2;
+				if (diff < minDiff)minDiff = diff;
 			}
-			result += minSize;
+			result += minDiff;
 		}
 		//
 
@@ -228,6 +229,21 @@ private:
 			}
 		}
 		return result;
+	}
+	Geometry::Point<double> decrypt(const double d) const {
+		double x, y;
+		if (d < 2) {
+			x = 1 - d;
+			y = sqrt(1 - x * x);
+		}
+		else {
+			x = d - 3;
+			y = sqrt(1 - x * x);
+			y *= -1;
+		}
+		std::vector<double> vec({ x,y });
+		Geometry::Point<double> res(vec);
+		return res;
 	}
 public:
 	inline static unsigned int METHOD_DEFAULT = 1;

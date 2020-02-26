@@ -93,5 +93,12 @@ namespace Geometry {
 		return result;
 	}
 	template <typename Scalar = double>
+	Scalar operator *(const Point<Scalar>& p1, const Point<Scalar>& p2) {
+		size_t dim = p1.dimension();
+		Scalar result(0);
+		for (size_t c1 = 0; c1 < dim; ++c1) result += p1[c1] * p2[c1];
+		return result;
+	}
+	template <typename Scalar = double>
 	Point<Scalar> operator -(const Point<Scalar>& p1, const Point<Scalar>& p2) { return p1 + (-1) * p2; }
 }
