@@ -16,7 +16,7 @@ int main() {
 	cin >> n;
 	cout << "Inserta t: ";
 	cin >> t;
-	cout << "Inserta el limite de iteraciones (x100): ";
+	cout << "Inserta el limite de iteraciones: ";
 	cin >> iterations;
 
 	CirclePointSet RG(n);

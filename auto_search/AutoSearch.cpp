@@ -8,7 +8,7 @@ using namespace std;
 
 using diffEvo = DiffEvo<vector<Circle::pointSet>, CirclePointSet, Qualifier>;
 
-int main() {
+int main(int argc, char* argv[]) {
 	/* Parameters List
 		Algorithm (1 = RandomSearch, 2 = DifferentialEvolution)
 		--General
